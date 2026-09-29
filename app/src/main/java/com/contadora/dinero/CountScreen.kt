@@ -1,8 +1,14 @@
 package com.contadora.dinero
 
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,8 +55,8 @@ fun CountScreen(vm: MoneyViewModel) {
 
     LazyColumn(
         Modifier.fillMaxSize().imePadding(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         if (denoms.isEmpty()) {
             item { EmptyText("No hay denominaciones visibles. Actívalas en la pestaña Denominaciones.") }
@@ -98,49 +106,56 @@ fun CountScreen(vm: MoneyViewModel) {
 private fun DenomRow(d: Denomination, qty: Int, symbol: String, onQty: (Int) -> Unit) {
     val color = d.type.color()
     WhiteCard {
-        Column(
+        Row(
             Modifier
                 .fillMaxWidth()
-                .drawBehind { drawRect(color, size = Size(5.dp.toPx(), size.height)) }
-                .padding(start = 17.dp, end = 12.dp, top = 12.dp, bottom = 8.dp),
+                .drawBehind { drawRect(color, size = Size(4.dp.toPx(), size.height)) }
+                .padding(start = 14.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        d.type.label.uppercase(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = color,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        Money.denom(d.cents, symbol),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                FilledTonalIconButton(onClick = { onQty((qty - 1).coerceAtLeast(0)) }) {
-                    Text("−", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                }
-                OutlinedTextField(
-                    value = if (qty == 0) "" else qty.toString(),
-                    onValueChange = { text -> onQty(text.filter(Char::isDigit).take(7).toIntOrNull() ?: 0) },
-                    modifier = Modifier.width(88.dp),
-                    singleLine = true,
-                    placeholder = { Text("0", Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
+            Column(Modifier.weight(1f)) {
+                Text(
+                    Money.denom(d.cents, symbol),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
                 )
-                FilledTonalIconButton(onClick = { onQty(qty + 1) }) {
-                    Icon(Icons.Default.Add, contentDescription = "Sumar")
-                }
+                Text(
+                    Money.format(d.cents * qty, symbol),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MutedColor,
+                )
             }
-            Text(
-                "Subtotal: " + Money.format(d.cents * qty, symbol),
-                Modifier.fillMaxWidth().padding(top = 4.dp),
-                textAlign = TextAlign.End,
-                style = MaterialTheme.typography.bodySmall,
-                color = MutedColor,
+            FilledTonalIconButton(
+                onClick = { onQty((qty - 1).coerceAtLeast(0)) },
+                modifier = Modifier.size(36.dp),
+            ) {
+                Text("−", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+            BasicTextField(
+                value = if (qty == 0) "" else qty.toString(),
+                onValueChange = { text -> onQty(text.filter(Char::isDigit).take(7).toIntOrNull() ?: 0) },
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .width(68.dp)
+                    .height(38.dp)
+                    .border(1.dp, Color(0xFFCBD5E1), RoundedCornerShape(8.dp)),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 16.sp, fontWeight = FontWeight.SemiBold),
+                cursorBrush = SolidColor(Teal),
+                decorationBox = { inner ->
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        if (qty == 0) Text("0", color = MutedColor, fontSize = 16.sp)
+                        inner()
+                    }
+                },
             )
+            FilledTonalIconButton(
+                onClick = { onQty(qty + 1) },
+                modifier = Modifier.size(36.dp),
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Sumar", Modifier.size(20.dp))
+            }
         }
     }
 }
