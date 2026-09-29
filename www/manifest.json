@@ -1,0 +1,15 @@
+{
+  "name": "Contadora de Dinero",
+  "short_name": "Contadora",
+  "description": "Cuenta billetes y monedas, guarda historial y crea tus propias denominaciones.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#0f766e",
+  "lang": "es",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
