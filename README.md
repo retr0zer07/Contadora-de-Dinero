@@ -1,6 +1,6 @@
 # Contadora de Dinero
 
-App Android para contar dinero por denominaciones.
+App Android nativa (Kotlin + Jetpack Compose) para contar dinero por denominaciones.
 
 ## Funciones
 - Escribe la cantidad de piezas por denominación (o usa los botones − / +) y obtén subtotales y total al instante.
@@ -20,14 +20,6 @@ App Android para contar dinero por denominaciones.
    El APK aparecerá en **Releases**.
 3. En el teléfono, abre el APK y permite "instalar apps de origen desconocido".
 
-## Versión web (opcional)
-En **Settings → Pages**, elige *Source: GitHub Actions*. La app quedará en
-`https://<usuario>.github.io/Contadora-de-Dinero/` y se puede instalar desde Chrome con "Agregar a pantalla principal".
-
 ## Desarrollo local
-Abre `www/index.html` en el navegador. Para Android Studio:
-```
-npm install
-npx cap add android
-npx cap open android
-```
+Abre la carpeta del proyecto en Android Studio y ejecuta en un emulador o teléfono.
+Código fuente en `app/src/main/java/com/contadora/dinero/`.

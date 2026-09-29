@@ -1,3 +1,6 @@
-node_modules/
-android/
-package-lock.json
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.kotlin/
